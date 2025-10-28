@@ -76,19 +76,22 @@ Se verifica que este conectado a la base de Datos en SQL server:
 
 > imagen: docker pull mongo
 
->contenedor: docker run -d --name mi_mongo -p 27019:27027 -e MONGO_INITDB_ROOT_USERNAME=mongo_mi -e MONGO_INITDB_ROOT_PASSWORD=12345 mongo
+>contenedor: docker run -d --name mymongo -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=mongo -e MONGO_INITDB_ROOT_PASSWORD=12345 mongo
+
+- para ingresar al contenedor de mongo 
+ > docker exec -it mymongo mongosh -u mongo -p 12345
+
 
 ### 1.7  ) Se crea los esquemas, usuarios, contraseñas del usuario y las 1000 inserciones.
 
 > esquemas 
-![alt text](image-14.png)
+![alt text](image-27.png)
 
-> usuario con su contraseña
-![alt text](image-15.png)
+> las 1000 inserciones
+![alt text](image-28.png)
 
-> 1000 inserciones
-![alt text](image-16.png)
-![alt text](image-17.png)
+> mostrar inserciones 
+![alt text](image-29.png)
 
 ## 2 ) Crear mi Ubuntu dentro de Docker
 
@@ -182,8 +185,55 @@ Conéctate al SQL Server (desde el mismo Ubuntu cliente)
 ![alt text](image-26.png)
 
 
+### 2.1) Podrás las conexiones desde Ubuntu:
+ - Mongo 
+Primero actualiza los repositorios
+> apt update -y
+
+ intalo el cliente de mongo 
+> apt install -y mongodb-clients
+
+>Verifica los nombres de tus contenedores
+![alt text](image-31.png)
 
 
+ Crear una red común para ambos contenedores
+> docker network create mynet
+
+Conectar los contenedores a esa red
+
+Conecta MongoDB y Ubuntu a la misma red:
+
+> docker network connect mynet mymongo
+
+>docker network connect mynet mi-ubuntu
+
+Confirmar que están conectados
+> docker network inspect mynet
+
+se ven los contenedores conectados 
+
+![alt text](image-30.png)
+![alt text](image-32.png)
+
+
+para ver las inserciones y lo que se realiza en el ubunto se  debe ingresar al contenedor 
+
+> docker exec -it mi-ubuntu bash
+
+Conéctate al MongoDB dentro del contenedor
+
+![alt text](image-33.png)
+
+
+Se veriica si las bases de mongo estan creadas 
+
+![alt text](image-34.png)
+![alt text](image-35.png)
+
+## 3) Ubuntu tenga su propio Docker interno,
+
+Instalar Docker dentro de tu contenedor Ubuntu
 
 
 
