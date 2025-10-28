@@ -231,9 +231,6 @@ Se veriica si las bases de mongo estan creadas
 ![alt text](image-34.png)
 ![alt text](image-35.png)
 
-## 3) Ubuntu tenga su propio Docker interno,
-
-Instalar Docker dentro de tu contenedor Ubuntu
 
 
 
