@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_dind
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_DATABASE: db_mysql
+      MYSQL_USER: maria
+      MYSQL_PASSWORD: 12345
+    ports:
+      - "3307:3306"
+
+  postgres:
+    image: postgres:15
+    container_name: postgres_dind
+    restart: always
+    environment:
+      POSTGRES_USER: maria
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: db_postgres
+    ports:
+      - "5433:5432"
+
+  mongo:
+    image: mongo:7
+    container_name: mongo_dind
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: maria
+      MONGO_INITDB_ROOT_PASSWORD: 12345
+    ports:
+      - "27018:27017"
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver_dind
+    restart: always
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "12345Abc*"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1440:1433"
