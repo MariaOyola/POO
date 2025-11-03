@@ -1,0 +1,35 @@
+# Base
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Instalar herramientas básicas y clientes de MySQL/PostgreSQL
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+        mysql-client \
+        postgresql-client \
+        curl \
+        gnupg \
+        ca-certificates \
+        lsb-release \
+        apt-transport-https \
+        software-properties-common \
+        sudo && \
+    rm -rf /var/lib/apt/lists/*
+
+# Instalar SQL Server Tools
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+    curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+    apt-get update -y && \
+    ACCEPT_EULA=Y apt-get install -y msodbcsql18 mssql-tools18 unixodbc-dev && \
+    echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc
+
+# Instalar cliente MongoDB (mongosh) de forma oficial y funcional
+RUN curl -fsSL https://pgp.mongodb.com/server-6.0.asc | gpg -o /usr/share/keyrings/mongodb.gpg --dearmor && \
+    echo "deb [signed-by=/usr/share/keyrings/mongodb.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org.list && \
+    apt-get update && \
+    apt-get install -y mongodb-mongosh && \
+    rm -rf /var/lib/apt/lists/*
+
+CMD ["/bin/bash"]
+ 

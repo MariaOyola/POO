@@ -1,0 +1,89 @@
+version: '3.9'
+
+services:
+  # 🐬 MySQL
+  mysql:
+    container_name: mysql_db
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_DATABASE: db_mysql
+      MYSQL_USER: maria
+      MYSQL_PASSWORD: 12345
+    ports:
+      - "3309:3306"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    networks:
+      - backend
+
+  # 🐘 PostgreSQL
+  postgres:
+    container_name: postgres_db
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: maria
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: db_postgres
+    ports:
+      - "5439:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  # 🧠 SQL Server 2022 (funcional y estable)
+  sqlserver:
+    container_name: sqlserver_db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: always
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "12345Abc*"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1439:1433"
+    # 👇 Usamos un volumen interno para evitar errores de permisos
+    volumes:
+      - sql_data:/var/opt/mssql
+    networks:
+      - backend
+
+  # 🍃 MongoDB
+  mongo:
+    container_name: mongo_db
+    image: mongo:7
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: maria
+      MONGO_INITDB_ROOT_PASSWORD: 12345
+      MONGO_INITDB_DATABASE: db_mongo
+    ports:
+      - "27019:27017"
+    volumes:
+      - ./data/mongo:/data/db
+    networks:
+      - backend
+
+  # 🐧 Ubuntu cliente (Nivel 3)
+  ubuntu_client:
+    container_name: ubuntu_client
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu-client
+    restart: always
+    networks:
+      - backend
+    tty: true
+
+
+# 🌐 Red compartida
+networks:
+  backend:
+    driver: bridge
+
+# 💾 Volumen para SQL Server
+volumes:
+  sql_data:
